@@ -1,0 +1,10 @@
+[
+  {
+    "email": "student1@example.com",
+    "name": "Student Name",
+    "lecture_topic": "Introduction to AI Agents",
+    "lecture_link": "https://github.com/AgenticAI-UIUC/Spring26/tree/main/Lecture-01",
+    "custom_message": "Looking forward to seeing you at the next lecture!",
+    "cc_email": "ashleyn4@illinois.edu"
+  }
+]
