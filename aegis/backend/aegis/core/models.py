@@ -139,6 +139,7 @@ class IncidentModel(Base):
     resolved_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     resolved_by: Mapped[str | None] = mapped_column(String, nullable=True)
     dismiss_reason: Mapped[str | None] = mapped_column(String, nullable=True)
+    report: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, server_default=func.now(), nullable=False
     )
