@@ -393,3 +393,56 @@ class TableSelectionItem(BaseModel):
 class DiscoveryConfirm(BaseModel):
     """User's selection from a discovery report."""
     table_selections: list[TableSelectionItem]
+
+
+# Incident report schemas
+
+
+class AnomalyDetail(BaseModel):
+    """Anomaly section of an incident report."""
+    type: str
+    table: str
+    detected_at: datetime
+    changes: list[dict[str, Any]]
+
+
+class RootCauseDetail(BaseModel):
+    """Root cause section of an incident report."""
+    explanation: str
+    source_table: str
+    confidence: float
+
+
+class BlastRadiusDetail(BaseModel):
+    """Blast radius section of an incident report."""
+    total_affected: int
+    affected_tables: list[str]
+
+
+class RecommendedAction(BaseModel):
+    """A single recommended action in an incident report."""
+    action: str
+    description: str
+    priority: int
+    status: str
+
+
+class TimelineEvent(BaseModel):
+    """A single event in the incident timeline."""
+    timestamp: datetime
+    event: str
+
+
+class IncidentReport(BaseModel):
+    """Structured incident report for user consumption."""
+    incident_id: int
+    title: str
+    severity: str
+    status: str
+    generated_at: datetime
+    summary: str
+    anomaly_details: AnomalyDetail
+    root_cause: RootCauseDetail
+    blast_radius: BlastRadiusDetail
+    recommended_actions: list[RecommendedAction]
+    timeline: list[TimelineEvent]
