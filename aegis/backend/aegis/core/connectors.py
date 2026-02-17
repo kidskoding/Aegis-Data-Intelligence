@@ -16,7 +16,7 @@ class WarehouseConnector:
 
     def __init__(self, connection_uri: str, dialect: str):
         self.dialect = dialect
-        self._engine = create_engine(connection_uri, pool_pre_ping=True)
+        self._engine = create_engine(connection_uri.strip(), pool_pre_ping=True)
 
     def test_connection(self) -> bool:
         """Verify connectivity with SELECT 1."""
