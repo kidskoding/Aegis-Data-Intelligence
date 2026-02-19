@@ -318,6 +318,63 @@ EOF
   ok "PR created: $PR_URL"
 }
 
+# ─── Step 7: Wait for approval ───────────────────────────────────────────────
+wait_for_approval() {
+  step 7 "Waiting for PR approval"
+
+  if [[ "$DRY_RUN" == true ]]; then
+    warn "Dry run — skipping approval wait"
+    return 0
+  fi
+
+  info "PR: $PR_URL"
+  info "Review the PR on GitHub, then approve it."
+  info "Press Ctrl+C to abort without merging."
+  echo ""
+
+  local poll_interval=30
+  while true; do
+    local pr_state
+    pr_state=$(gh pr view "$BRANCH_NAME" --json state,reviewDecision -q '.state + ":" + (.reviewDecision // "NONE")')
+
+    local state="${pr_state%%:*}"
+    local decision="${pr_state##*:}"
+
+    if [[ "$state" == "CLOSED" ]]; then
+      warn "PR was closed without merging. Aborting."
+      exit 0
+    fi
+
+    if [[ "$state" == "MERGED" ]]; then
+      ok "PR was already merged externally."
+      return 0
+    fi
+
+    if [[ "$decision" == "APPROVED" ]]; then
+      ok "PR approved!"
+      return 0
+    fi
+
+    printf "\r  Waiting for approval... (polling every ${poll_interval}s, Ctrl+C to abort)"
+    sleep "$poll_interval"
+  done
+}
+
+# ─── Step 8: Merge ───────────────────────────────────────────────────────────
+merge_pr() {
+  step 8 "Merging PR"
+
+  if [[ "$DRY_RUN" == true ]]; then
+    warn "Dry run — skipping merge"
+    return 0
+  fi
+
+  gh pr merge "$BRANCH_NAME" --squash --delete-branch
+
+  ok "PR merged and branch cleaned up!"
+  info "Issue #$ISSUE_NUM should be closed automatically."
+}
+
 # ─── Main (placeholder — filled in by subsequent tasks) ──────────────────────
 main() {
   parse_args "$@"
