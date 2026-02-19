@@ -158,6 +158,55 @@ create_branch() {
   ok "On branch: $BRANCH_NAME"
 }
 
+# ─── Step 3: Run Claude Code ─────────────────────────────────────────────────
+run_claude() {
+  local prompt="$1"
+  step 3 "Running Claude Code"
+
+  info "Invoking claude -p with max $MAX_TURNS turns..."
+
+  CLAUDECODE="" claude -p "$prompt" \
+    --max-turns "$MAX_TURNS" \
+    --allowedTools "Bash,Read,Edit,Write,Glob,Grep" \
+    --output-format text \
+    --no-session-persistence \
+    2>&1 | tee /tmp/agent-fix-claude-output.txt
+
+  local exit_code=${PIPESTATUS[0]}
+  if [[ $exit_code -ne 0 ]]; then
+    err "Claude exited with code $exit_code"
+    return 1
+  fi
+
+  ok "Claude completed successfully"
+}
+
+build_prompt() {
+  cat <<PROMPT
+You are fixing a GitHub issue in this repository.
+
+Issue #${ISSUE_NUM}: ${ISSUE_TITLE}
+
+${ISSUE_BODY}
+
+Instructions:
+- Read relevant files to understand the codebase before making changes
+- Make the minimal fix needed to resolve the issue
+- Do not refactor unrelated code
+- Follow existing code conventions (check CLAUDE.md if present)
+- Do not commit — the caller script handles commits
+PROMPT
+}
+
+fix_issue() {
+  local prompt
+  prompt=$(build_prompt)
+  run_claude "$prompt" || {
+    err "Claude failed to fix the issue. Aborting."
+    exit 1
+  }
+}
+
 # ─── Main (placeholder — filled in by subsequent tasks) ──────────────────────
 main() {
   parse_args "$@"
@@ -166,6 +215,7 @@ main() {
 
   fetch_issue
   create_branch
+  fix_issue
 }
 
 main "$@"
