@@ -1,6 +1,7 @@
 name: Claude Code Agent
 
 on:
+  workflow_dispatch:
   issue_comment:
     types: [created]
   issues:
