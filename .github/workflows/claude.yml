@@ -88,9 +88,8 @@ jobs:
                - **Files Changed**: List with brief explanation of each change
                - **Test Results**: Full test output summary
                - **Risk Level**: Medium / High / Critical with reasoning
-            5. Comment on the original issue: "PR #<pr-number> created — needs review (@ashcastelinocs124)"
-            6. Do NOT merge. Do NOT close the issue. Wait for human approval.
-               The issue will be closed automatically when the PR is merged (use `Closes #<issue-number>` in the PR body).
+            5. Close the original issue with: `gh issue close <issue-number> -c "PR #<pr-number> created — needs review (@ashcastelinocs124)"`
+            6. Do NOT merge. Wait for human approval.
 
             ## Project Conventions
             - Read aegis/CLAUDE.md for full project context
