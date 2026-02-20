@@ -29,7 +29,7 @@ All issues must follow this exact Markdown format:
 
 **Details:**
 
-- **Context:** (e.g., package name, specific files like `cmd/gopherclaw/main.go`, or environment)
+- **Context:** (e.g., module name, specific files like `aegis/backend/aegis/core/models.py`, or environment)
 - **Description:** (Steps to reproduce for Bugs; User stories for Feats; Reasoning for Refactors)
 
 **Reproduction (if applicable):**
