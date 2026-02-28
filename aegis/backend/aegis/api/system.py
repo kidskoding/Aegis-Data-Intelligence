@@ -24,11 +24,13 @@ async def health():
 
 @router.get("/status", dependencies=[Depends(verify_api_key)])
 async def status():
+    from aegis.config import settings
     from aegis.services.notifier import notifier
 
     return {
         "scanner": "running",
         "websocket_clients": notifier.connection_count,
+        "llm_enabled": bool(settings.openai_api_key),
     }
 
 
