@@ -35,7 +35,21 @@ class Investigator:
         db: Session,
         connection_model: ConnectionModel,
     ) -> DiscoveryReport:
-        """Run the LangChain agent to discover and classify warehouse tables."""
+        """Run the LangChain agent to discover and classify warehouse tables.
+
+        Falls back to deterministic classification if the LangChain agent fails
+        or if AEGIS_OPENAI_API_KEY is not configured.
+        """
+        from aegis.config import settings
+
+        if not settings.openai_api_key:
+            logger.warning(
+                "Skipping LangChain Investigator — AEGIS_OPENAI_API_KEY is not set. "
+                "Using deterministic fallback for connection '%s'.",
+                connection_model.name,
+            )
+            return self._deterministic_fallback(connector, db, connection_model)
+
         try:
             return self._langchain_discover(connector, db, connection_model)
         except Exception:

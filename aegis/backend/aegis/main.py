@@ -23,6 +23,12 @@ async def lifespan(app: FastAPI):
     run_migrations()
     logger.info("Database migrations applied")
 
+    if not settings.openai_api_key:
+        logger.warning(
+            "AEGIS_OPENAI_API_KEY is not set — LLM-powered agents (Architect, "
+            "Investigator) will be unavailable. Set AEGIS_OPENAI_API_KEY to enable them."
+        )
+
     # Start background scanner and lineage refresh
     from aegis.services.scanner import start_scanner
 
