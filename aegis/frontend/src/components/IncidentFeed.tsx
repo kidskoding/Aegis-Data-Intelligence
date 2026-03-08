@@ -3,8 +3,9 @@ import SeverityBadge from "./SeverityBadge";
 import type { Incident } from "../api/types";
 
 function timeAgo(dateStr: string): string {
+  const normalized = /Z$|[+-]\d{2}:?\d{2}$/.test(dateStr) ? dateStr : dateStr + "Z";
   const seconds = Math.floor(
-    (Date.now() - new Date(dateStr).getTime()) / 1000
+    (Date.now() - new Date(normalized).getTime()) / 1000
   );
   if (seconds < 60) return `${seconds}s ago`;
   const minutes = Math.floor(seconds / 60);

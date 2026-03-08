@@ -153,6 +153,12 @@ export interface IncidentReport {
   timeline: TimelineEvent[];
 }
 
+export interface SystemStatus {
+  scanner: string;
+  websocket_clients: number;
+  llm_enabled: boolean;
+}
+
 export interface WsEvent {
   event: string;
   data: Record<string, unknown>;

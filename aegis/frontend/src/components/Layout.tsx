@@ -1,7 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { clsx } from "clsx";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useSystemStore } from "../stores/systemStore";
+import LlmWarningBanner from "./LlmWarningBanner";
 
 const mainNav = [
   { to: "/dashboard", label: "Dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" },
@@ -15,7 +16,11 @@ const monitoringNav = [
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const { stats } = useSystemStore();
+  const { stats, llmEnabled, fetchStatus } = useSystemStore();
+
+  useEffect(() => {
+    fetchStatus();
+  }, [fetchStatus]);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -113,6 +118,9 @@ export default function Layout({ children }: { children: ReactNode }) {
             </button>
           </div>
         </header>
+
+        {/* No-LLM banner */}
+        {llmEnabled === false && <LlmWarningBanner />}
 
         {/* Content */}
         <main className="flex-1 overflow-auto">

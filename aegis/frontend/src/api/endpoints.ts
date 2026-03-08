@@ -6,6 +6,7 @@ import type {
   LineageGraph,
   MonitoredTable,
   Stats,
+  SystemStatus,
   BlastRadius,
   TableProposal,
 } from "./types";
@@ -95,6 +96,9 @@ export const getStats = () =>
 
 export const getHealth = () =>
   client.get<{ status: string }>("/health").then((r) => r.data);
+
+export const getStatus = () =>
+  client.get<SystemStatus>("/status").then((r) => r.data);
 
 export const triggerScan = () =>
   client.post("/scan/trigger").then((r) => r.data);
